@@ -3,6 +3,7 @@ import requests
 from django.shortcuts import render
 
 # Create your views here.
+from django_ratelimit.decorators import ratelimit
 from django.http import JsonResponse
 from datetime import datetime, timezone
 
@@ -28,3 +29,7 @@ def my_profile(request):
         "fact": fact
     }
     return JsonResponse(result, content_type="application/json")
+
+@ratelimit(key='ip', rate='5/m', block=True)
+def me(request):
+    return JsonResponse({"message": "ok"})
